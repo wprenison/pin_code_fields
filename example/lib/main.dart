@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:pin_code_fields/pin_code_fields.dart' as pcf;
 
 import './constants/constants.dart';
 
@@ -46,7 +46,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
   // ..text = "123456";
 
   // ignore: close_sinks
-  StreamController<ErrorAnimationType>? errorController;
+  StreamController<pcf.ErrorAnimationType>? errorController;
 
   bool hasError = false;
   String currentText = "";
@@ -54,7 +54,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
 
   @override
   void initState() {
-    errorController = StreamController<ErrorAnimationType>();
+    errorController = StreamController<pcf.ErrorAnimationType>();
     super.initState();
   }
 
@@ -137,40 +137,30 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                     vertical: 8.0,
                     horizontal: 30,
                   ),
-                  child: PinCodeTextField(
+                  child: pcf.PinCodeTextField(
                     appContext: context,
                     pastedTextStyle: TextStyle(
                       color: Colors.green.shade600,
                       fontWeight: FontWeight.bold,
                     ),
-                    length: 6,
-                    obscureText: true,
-                    obscuringCharacter: '*',
-                    obscuringWidget: const FlutterLogo(
-                      size: 24,
-                    ),
-                    blinkWhenObscuring: true,
-                    animationType: AnimationType.fade,
-                    validator: (v) {
-                      if (v!.length < 3) {
-                        return "I'm from validator";
-                      } else {
-                        return null;
-                      }
-                    },
-                    pinTheme: PinTheme(
-                      shape: PinCodeFieldShape.box,
-                      borderRadius: BorderRadius.circular(5),
-                      fieldHeight: 50,
-                      fieldWidth: 40,
-                      activeFillColor: Colors.white,
-                    ),
-                    cursorColor: Colors.black,
+                    length: 4,
+                    animationType: pcf.AnimationType.scale,
+                    pinTheme: pcf.PinTheme(
+                        shape: pcf.PinCodeFieldShape.box,
+                        borderRadius: BorderRadius.circular(8),
+                        fieldHeight: 64,
+                        fieldWidth: 64,
+                        activeColor: Colors.amberAccent,
+                        inactiveColor: Colors.blueGrey,
+                        selectedColor: Colors.amberAccent,
+                        errorBorderColor: Colors.redAccent),
+                    cursorColor: Colors.transparent,
                     animationDuration: const Duration(milliseconds: 300),
-                    enableActiveFill: true,
+                    hintCharacter: 'CODE',
+                    spreadHintCharacters: true,
                     errorAnimationController: errorController,
                     controller: textEditingController,
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                     boxShadows: const [
                       BoxShadow(
                         offset: Offset(0, 1),
@@ -246,7 +236,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                       formKey.currentState!.validate();
                       // conditions for validating
                       if (currentText.length != 6 || currentText != "123456") {
-                        errorController!.add(ErrorAnimationType
+                        errorController!.add(pcf.ErrorAnimationType
                             .shake); // Triggering error shake animation
                         setState(() => hasError = true);
                       } else {
